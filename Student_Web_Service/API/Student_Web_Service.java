@@ -1,6 +1,6 @@
-package Students.API;
-import Students.bean.Student;
-import Students.JDBC.StudentJDBC;
+package Student_Web_Service.API;
+import Student_Web_Service.bean.Student;
+import Student_Web_Service.JDBC.StudentJDBC;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 //The GET Method is used to retrieve a student's information from the database based on different student parameters (Student ID and Number)
-//The POST Method is used to insert a new student's information to the database
+//The POST Method is used to insertStudent a new student's information to the database
 //The PUT Method is used to update a student's information in the database
 //The DELETE Method is used to delete a student's information from the database based on different student parameters (Student ID and Number)
 
@@ -20,17 +20,17 @@ public class Student_Web_Service {
     @Path("/get")
     @Produces(MediaType.TEXT_XML)
     public String getStudentInfoByID(
-            @QueryParam("student_id") long student_id,
+            @QueryParam("student_id") long student_id
     ) throws Exception {
         //Create a new Student object using the student ID. 
         Student student = new Student();
         student.setStudentID(student_id);
 
         //Obtain a connection from the MySQL database
-        Connection connection = StudentsJDBC.getConnection();
+        Connection connection = StudentJDBC.getConnection();
 
         //Searching the database to see if the student is there
-        List<Students> result = StudentsJDBC.getStudent(connection, student);
+        List<Student> result = StudentJDBC.getStudent(connection, student);
 
         //Data header for XML (data output format)
         String xml_data = "<?xml version=\"1.0\"?>" +
@@ -44,15 +44,17 @@ public class Student_Web_Service {
             xml_data += "<number>" + result.get(i).getStudentNumber() + "</number>";
             String courseString = "";
             for(int o = 0;o < result.get(i).getCourse().length;o++){
-                course_str += result.get(i).getCourse()[o];
+                courseString += result.get(i).getCourse()[o];
                 if(o != result.get(i).getCourse().length-1){
                     courseString += "@";
                 }
             }
-            xml_data += "<course>" + course_str + "</course>";
+            xml_data += "<course>" + courseString + "</course>";
             xml_data += "</student>";
         }
         xml_data += "</students>";
+
+        StudentJDBC.close(connection);
         return xml_data;
     }
 
@@ -60,17 +62,17 @@ public class Student_Web_Service {
     @Path("/get")
     @Produces(MediaType.TEXT_XML)
     public String getStudentInfoByNumber(
-            @QueryParam("student_number") long student_number,
+            @QueryParam("student_number") String student_number
     ) throws Exception {
         //Create a new Student object using the student number. 
         Student student = new Student();
         student.setStudentNumber(student_number);
 
         //Obtain a connection from the MySQL database
-        Connection connection = StudentsJDBC.getConnection();
+        Connection connection = StudentJDBC.getConnection();
 
         //Searching the database to see if the student is there
-        List<Students> result = StudentsJDBC.getStudent(connection, student);
+        List<Student> result = StudentJDBC.getStudent(connection, student);
 
         //Data header for XML (data output format)
         String xml_data = "<?xml version=\"1.0\"?>" +
@@ -84,14 +86,16 @@ public class Student_Web_Service {
             xml_data += "<number>" + result.get(i).getStudentNumber() + "</number>";
             String courseString = "";
             for(int o = 0;o < result.get(i).getCourse().length;o++){
-                course_str += result.get(i).getCourse()[o];
+                courseString += result.get(i).getCourse()[o];
                 if(o != result.get(i).getCourse().length-1){
                     courseString += "@";
                 }
             }
-            xml_data += "<course>" + course_str + "</course>";
+            xml_data += "<course>" + courseString + "</course>";
             xml_data += "</student>";
         }
+        StudentJDBC.close(connection);
+
         xml_data += "</students>";
         return xml_data;
     }
@@ -113,10 +117,14 @@ public class Student_Web_Service {
         student.setCourse(course);
 
         //Obtain a connection from the MySQL database
-        Connection connection = StudentsJDBC.getConnection();
+        Connection connection = StudentJDBC.getConnection();
         
         //Searching the database to see if the student is there
-        int result = StudentsJDBC.insert(connection, student);
+        int result = StudentJDBC.insertStudent(connection, student);
+
+        StudentJDBC.close(connection);
+
+
 
         //If the result is 1, then the new student has been successfully added to the database, otherwise it is not successful
         return result+"";
@@ -141,7 +149,7 @@ public class Student_Web_Service {
         studentSearch.setStudentName(student_name_cur);
         studentSearch.setStudentNumber(student_number_cur);
         String[] courseSearch = student_course_cur.split("@");
-        studentSearch.setCourse(courSearch);
+        studentSearch.setCourse(courseSearch);
 
         Student student = new Student();
         student.setStudentName(student_name);
@@ -150,10 +158,13 @@ public class Student_Web_Service {
         student.setCourse(course);
 
         //Obtain a connection from the MySQL database
-        Connection connection = StudentsJDBC.getConnection();
+        Connection connection = StudentJDBC.getConnection();
 
         //Searching the database to see if the student is there
-        int result = StudentsJDBC.update(connection, studentSearch, student);
+        int result = StudentJDBC.updateStudent(connection, studentSearch, student);
+
+        StudentJDBC.close(connection);
+
 
         //If the result is 1, then the student's information has been successfully updated, otherwise it is not successful
         return result+"";
@@ -163,17 +174,20 @@ public class Student_Web_Service {
     @Path("/delete")
     @Produces(MediaType.TEXT_PLAIN)
     public String deleteStudentByID(
-            @QueryParam("student_id") long student_id,
+            @QueryParam("student_id") long student_id
     ) throws Exception {
         //Create a new Student object using the student ID. 
         Student student = new Student();
         student.setStudentID(student_id);
 
         //Obtain a connection from the MySQL database
-        Connection connection = StudentsJDBC.getConnection();
+        Connection connection = StudentJDBC.getConnection();
 
         //Searching the database to see if the student is there
-        int result = StudentJDBC.delete(connection, student);
+        int result = StudentJDBC.deleteStudent(connection, student);
+
+        StudentJDBC.close(connection);
+
 
         //If the result is 1, then the student has been successfully deleted from the database, otherwise it is not successful
         return result+"";
@@ -183,17 +197,20 @@ public class Student_Web_Service {
     @Path("/delete")
     @Produces(MediaType.TEXT_PLAIN)
     public String deleteStudentByNumber(
-            @QueryParam("student_number") long student_number,
+            @QueryParam("student_number") String student_number
     ) throws Exception {
         //Create a new Student object using the student ID. 
         Student student = new Student();
         student.setStudentNumber(student_number);
 
         //Obtain a connection from the MySQL database
-        Connection connection = StudentsJDBC.getConnection();
+        Connection connection = StudentJDBC.getConnection();
 
         //Searching the database to see if the student is there
-        int result = StudentJDBC.delete(connection, student);
+        int result = StudentJDBC.deleteStudent(connection, student);
+
+        StudentJDBC.close(connection);
+
 
         //If the result is 1, then the student has been successfully deleted from the database, otherwise it is not successful
         return result+"";

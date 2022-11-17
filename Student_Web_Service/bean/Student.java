@@ -1,4 +1,4 @@
-package Students.bean;
+package Student_Web_Service.bean;
 
 public class Student {
     private long student_id;
@@ -50,11 +50,11 @@ public class Student {
 
     public String getCourseString() {
         String course = "";
-        for(int i = 0; i < course.length; i++){
+        for(int i = 0; i < this.course.length; i++){
             if(i == 0){
-                course += course[i];
+                course += this.course[i];
             }else {
-                course += "@" + course[i];
+                course += "@" + this.course[i];
             }
         }
         return course;
@@ -66,7 +66,7 @@ public class Student {
 
     public int equal(Student student){
         //if the names, student-numbers, and course information are equal, then these two student objects are equal
-        if(this.getStudent_name().equals(obj.getStudent_name())&& this.getStudent_number().equals(obj.getStudent_number())&& this.get_str_Course().equals(obj.get_str_Course())){
+        if(this.getStudentName().equals(student.getStudentName())&& this.getStudentNumber().equals(student.getStudentNumber())&& this.getCourseString().equals(student.getCourseString())){
             return 1;//The 2 student objects are equal
         }
         return 0;//The 2 student objects are not equal

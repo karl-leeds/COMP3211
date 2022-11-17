@@ -1,4 +1,4 @@
-package Students.API;
+package Student_Web_Service.API;
 import java.io.IOException;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import com.sun.net.httpserver.HttpServer;
@@ -22,6 +22,4 @@ public class StudentWebService_Server {
             e.printStackTrace();
         }
     }
-
-
 }

@@ -1,5 +1,5 @@
-package Students.JDBC;
-import Students.bean.Student;
+package Student_Web_Service.JDBC;
+import Student_Web_Service.bean.Student;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import javax.sql.DataSource;
 import java.sql.*;
@@ -52,9 +52,9 @@ public class StudentJDBC{
         }
     }
 
-    public static List<Students> getStudent(Connection connection, Student student) throws SQLException {
+    public static List<Student> getStudent(Connection connection, Student student) throws SQLException {
         //Initializing and setup
-        List<Students> result_list = new ArrayList<Students>();
+        List<Student> result_list = new ArrayList<Student>();
         Statement statement = null;
         ResultSet result = null;
 
@@ -117,8 +117,8 @@ public class StudentJDBC{
 
                 String[] course_list = course.split("@");
                 if(student.getCourse() != null){
-                    String[] course = student.getCourse();
-                    for(String x: course){
+                    String[] course1 = student.getCourse();
+                    for(String x: course1){
                         for(String s: course_list){
                             if(s.equals(x)){
                                 mark = 1;
@@ -131,7 +131,7 @@ public class StudentJDBC{
                             mark = 0;
                         }
                     }
-                    if(count != course.length){
+                    if(count != course1.length){
                         continue;
                     }
                 }
@@ -157,7 +157,7 @@ public class StudentJDBC{
         //Generating the SQL query string
         String sql = "DELETE FROM `students` where ";
         //Search the database to check whether the student object data is there or not
-        List<Students> result_list = getStudent(connection, student);
+        List<Student> result_list = getStudent(connection, student);
         if(result_list.size() == 0){
             return 0;
         }
@@ -166,7 +166,7 @@ public class StudentJDBC{
 
         try{
             //Using the generated SQL query string to delete the student object from the database
-            statement = connection.createStatement();
+            as = connection.createStatement();
             for(int i = 0; i < result_list.size(); i++){
                 as.executeUpdate(sql + "`student_id` = " + result_list.get(i).getStudentID() + ";");
             }
@@ -175,7 +175,7 @@ public class StudentJDBC{
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
-            close(statement);
+            close(as);
         }
         return 0;//Unsuccessful delete
     }
@@ -184,10 +184,10 @@ public class StudentJDBC{
         //Initializing and setup
         Statement statement = null;
         //Search database to see if the student object is already in the database or not
-        if(student.getStudent_number() != null){
+        if(student.getStudentNumber() != null){
             Student newStudent = new Student();
             newStudent.setStudentNumber(student.getStudentNumber());
-            List<Students> search_result = getStudent(connection, newStudent);
+            List<Student> search_result = getStudent(connection, newStudent);
             if(search_result.size() != 0){
                 throw new Exception("Multiple students cannot have the same student number");
             }
@@ -227,7 +227,7 @@ public class StudentJDBC{
         Statement statement = null;
 
         //Searching through the database to see if the searchStudent object data is there or not already
-        List<Students> search_result = getStudent(connection, searchStudent);
+        List<Student> search_result = getStudent(connection, searchStudent);
 
         //Generating the SQL query string to update a current student
         String temp[] = {"","","",""};
@@ -277,7 +277,7 @@ public class StudentJDBC{
             statement = connection.createStatement();
             String sql = "UPDATE `students` SET " + temp[3] + " where ";
             for(int i = 0; i < search_result.size(); i++){
-                statement.executeUpdate(sql + "`student_id` =" +search_result.getStudent(i).getStudentID()+";");
+                statement.executeUpdate(sql + "`student_id` =" +search_result.get(i).getStudentID()+";");
             }
 
             return 1;//Sucessful update
