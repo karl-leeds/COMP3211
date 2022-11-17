@@ -28,10 +28,10 @@
     </nav>
 
     <div class="header">
-        <h1 style="color: #c8d8e4;">POST Method - Create New Student/New Course</h1>
+        <h1 style="color: #c8d8e4;">PUT Method - Update Student Information/Course Information</h1>
     </div>
 
-    <form action = ".jsp" method = "POST" class="video">
+    <form action = ".jsp" method = "PUT" class="video">
         Student Number: <br>
         <input type = "text" name = "student_number">
         <br>

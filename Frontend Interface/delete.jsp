@@ -28,18 +28,18 @@
     </nav>
 
     <div class="header">
-        <h1 style="color: #c8d8e4;">POST Method - Create New Student/New Course</h1>
+        <h1 style="color: #c8d8e4;">DELETE Method - Delete Student/Course based on ID or Name</h1>
     </div>
 
-    <form action = ".jsp" method = "POST" class="video">
+    <form action = ".jsp" method = "DELETE" class="video">
+        Student ID: <br>
+        <input type = "text" name = "student_id">
+        <br>
         Student Number: <br>
         <input type = "text" name = "student_number">
         <br>
-        Student Name: <br>
-        <input type = "text" name = "student_name">
-        <br>
-        Student Course: <br>
-        <input type = "text" name = "student_course">
+        Course ID: <br>
+        <input type = "text" name = "course_id" />
         <br>
         Course Name: <br>
         <input type = "text" name = "course_name" />

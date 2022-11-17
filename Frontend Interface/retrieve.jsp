@@ -28,14 +28,24 @@
     </nav>
 
     <div class="header">
-        <h1 style="color: #c8d8e4;">COMP3211 Student Timetable Web Service Application</h1>
+        <h1 style="color: #c8d8e4;">GET Method - Retrieve Student/Course and Generate PDF of Timetable</h1>
     </div>
 
-    <div class="video">
-        <video width="600" height="480" controls>
-            <source src="" type="video/mp4">
-        </video>
-    </div>
+    <form action = ".jsp" method = "GET" class="video">
+        Student ID: <br>
+        <input type = "text" name = "student_id">
+        <br>
+        Student Number: <br>
+        <input type = "text" name = "student_number">
+        <br>
+        Course ID: <br>
+        <input type = "text" name = "course_id" />
+        <br>
+        Course Name: <br>
+        <input type = "text" name = "course_name" />
+        <br>
+        <input type = "submit" value = "Submit" />
+     </form>
     
     
 </body>
