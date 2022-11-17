@@ -9,19 +9,19 @@ import java.util.Properties;
 
 public class StudentJDBC{
 
-    private static DataSource ds;
+    private static DataSource datasource;
     static{
         try{
             Properties properties = new Properties();
             properties.load(StudentJDBC.class.getClassLoader().getResourceAsStream("druid.properties"));
-            ds = DruidDataSourceFactory.createDataSource(properties);
+            datasource = DruidDataSourceFactory.createDataSource(properties);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
     public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
+        return datasource.getConnection();
     }
 
     public static void close(Connection connection) throws SQLException {

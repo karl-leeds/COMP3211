@@ -48,28 +48,28 @@ public class Student {
         return course;
     }
 
-    public String get_StrCourse() {
-        String cour = "";
+    public String getCourseString() {
+        String course = "";
         for(int i = 0; i < course.length; i++){
             if(i == 0){
-                cour += course[i];
+                course += course[i];
             }else {
-                cour += "@" + course[i];
+                course += "@" + course[i];
             }
         }
-        return cour;
+        return course;
     }
 
     public void setCourse(String[] course) {
         this.course = course;
     }
 
-    public int equal(Students obj){
-        //if name, student-number, and course information are equals, which means these two object are equal
+    public int equal(Student student){
+        //if the names, student-numbers, and course information are equal, then these two student objects are equal
         if(this.getStudent_name().equals(obj.getStudent_name())&& this.getStudent_number().equals(obj.getStudent_number())&& this.get_str_Course().equals(obj.get_str_Course())){
-            return 1;//means equal
+            return 1;//The 2 student objects are equal
         }
-        return 0;//means do not equal
+        return 0;//The 2 student objects are not equal
     }
 
 }

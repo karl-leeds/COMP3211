@@ -5,15 +5,15 @@ import com.sun.net.httpserver.HttpServer;
 
 
 public class StudentWebService_Server {
-    //initialize the URL
+    //Initialize the URL of the server
     static String StudentWebService_Server_URL = "http://localhost:9999/StudentWebService/";
 
     public static void main(String[] args) {
         try {
-            //creat httpServer object.
+            //Creating the HTTPServer object.
             HttpServer server = HttpServerFactory.create(StudentWebService_Server_URL);
             server.start();
-            System.out.println("Press Enter to stop the server. ");
+            System.out.println("Press Enter to stop the server.");
             System.in.read();
             server.stop(0);
         } catch (IllegalArgumentException e) {
