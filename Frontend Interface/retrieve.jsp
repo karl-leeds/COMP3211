@@ -46,7 +46,11 @@
         <br>
         <input type = "submit" value = "Submit" />
      </form>
-    
+    <br>
+    <br>
+    <form action = ".jsp" method = "POST" class="video">
+        <input type = "submit" value = "Generate PDF" />
+     </form>
     
 </body>
 
