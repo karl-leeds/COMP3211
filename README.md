@@ -1,1 +1,1 @@
-# comp3211
+# COMP3211 Distributed Systems Coursework 2
