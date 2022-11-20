@@ -1,16 +1,14 @@
 package Events.JDBC;
 
 import Events.bean.Events;
-import Students.JDBC.For_students;
-import Students.bean.Students;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.Date;
 
 public class For_Events {
 
@@ -18,7 +16,7 @@ public class For_Events {
     static{
         try{
             Properties pro = new Properties();
-            pro.load(For_students.class.getClassLoader().getResourceAsStream("druid.properties"));
+            pro.load(For_Events.class.getClassLoader().getResourceAsStream("druid.properties"));
             ds = DruidDataSourceFactory.createDataSource(pro);
         }catch(Exception e){
             e.printStackTrace();
@@ -57,38 +55,32 @@ public class For_Events {
         }
     }
 
-    public static List<Events> get(Connection conn, Events obj) throws SQLException {
+
+    public static List<Events> get(Connection conn, Events obj) throws SQLException, ParseException {
         //initialize
         List<Events> result_list = new ArrayList<Events>();
         Statement stat = null;
         ResultSet result = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd/HH:mm:ss");
 
         //generate the sql string
         String sql = "select * from `events`";
         String[] temp = {"","","","","","",""};
-        if(obj.getEvent_title() != null){
+        if(!Objects.equals(obj.getEvent_title(), "null")){
             temp[0] = "`event_title` = '" + obj.getEvent_title() + "'";
         }
-        if(obj.getEvent_description() != null){
+        if(!Objects.equals(obj.getEvent_description(), "null")){
             temp[1] = "`event_description` = '" + obj.getEvent_description() + "'";
         }
-        if(obj.getUser_name() != null){
+        if(!Objects.equals(obj.getUser_name(), "null")){
             temp[2] = "`user_name` = '" + obj.getUser_name() + "'";
         }
         if(obj.getEvent_id() != -1){
             temp[3] = "`event_id` = '" + obj.getEvent_id() + "'";
         }
-        if(obj.getStart_time() != null){
-            temp[4] = "`start_time` = '" + obj.getStart_time()+"'";
-        }
-        if(obj.getEnd_time() != null){
-            temp[5] = "`end_time` = '" + obj.getEnd_time()+"'";
-        }
 
         int record = 0;
-        for(int i = 0; i < 6; i++){
-            if(record == 1 && temp[i] != ""){
+        for(int i = 0; i < 4; i++){
+            if(record == 1 && !temp[i].equals("")){
                 temp[i] = " and " + temp[i];
             }
             if(!temp[i].equals("")){
@@ -103,10 +95,20 @@ public class For_Events {
             sql = sql + ";";
         }
 
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date_start = sdf.parse(obj.getStart_time());
+        Calendar calendar_start = Calendar.getInstance();
+        calendar_start.setTime(date_start);
+
+        Date date_end = sdf.parse(obj.getEnd_time());
+        Calendar calendar_end = Calendar.getInstance();
+        calendar_end.setTime(date_end);
+
         try {
             //use sql string to get data from database
             stat = conn.createStatement();
             result = stat.executeQuery(sql);
+
 
             //initialize variable
             Events eve;
@@ -120,26 +122,48 @@ public class For_Events {
                 String start_t = result.getString("start_time");
                 String end_t = result.getString("end_time");
 
-                eve = new Events();
-                eve.setEvent_id(id);
-                eve.setUser_name(name);
-                eve.setEvent_title(title);
-                eve.setEvent_description(description);
-                eve.setStart_time(start_t);
-                eve.setEnd_time(end_t);
+                Date date_start_s = sdf.parse(start_t);
+                Calendar calendar_start_s = Calendar.getInstance();
+                calendar_start_s.setTime(date_start_s);
 
-                result_list.add(eve);
+
+
+
+                if(obj.getStart_time().equals("2000-01-01 00:00:00") && obj.getEnd_time().equals("2000-01-01 00:00:00")){
+                    eve = new Events();
+                    eve.setEvent_id(id);
+                    eve.setUser_name(name);
+                    eve.setEvent_title(title);
+                    eve.setEvent_description(description);
+                    eve.setStart_time(start_t);
+                    eve.setEnd_time(end_t);
+
+
+                    result_list.add(eve);
+                }else {
+                    if (calendar_start_s.before(calendar_end) && calendar_start_s.after(calendar_start)) {
+                        eve = new Events();
+                        eve.setEvent_id(id);
+                        eve.setUser_name(name);
+                        eve.setEvent_title(title);
+                        eve.setEvent_description(description);
+                        eve.setStart_time(start_t);
+                        eve.setEnd_time(end_t);
+
+                        result_list.add(eve);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
-            close(stat);
             close(result);
+            close(stat);
         }
         return result_list;
     }
 
-    public static int delete(Connection conn,Events obj) throws SQLException {
+    public static int delete(Connection conn,Events obj) throws Exception {
         //generate sql string
         String sql = "DELETE FROM `events` where ";
         //search event data to check whether the data is in the database
@@ -184,10 +208,16 @@ public class For_Events {
                 +obj.getUser_name() + "','"+obj.getStart_time() + "','"
                 +obj.getEnd_time() + "');";
 
+
+
+
         try{
-            //use insert sql string to insert data
-            as = conn.createStatement();;
+            //use insert sql string to insert data and do input validation check
+            as = conn.createStatement();
             as.executeUpdate(sql);
+
+
+
 
             return 1;//means success
         } catch (Exception e) {
@@ -206,33 +236,34 @@ public class For_Events {
 
         //generate sql string
         String[] temp = {"","","","","","",""};
-        if(update_obj.getEvent_title() != null){
+
+        if(!update_obj.getEvent_title().equals("null")){
             temp[0] = " `event_title` = '" + update_obj.getEvent_title() + "'";
         }
-        if(update_obj.getEvent_description() != null){
+        if(!update_obj.getEvent_description().equals("null")){
             temp[1] = " `event_description` = '" + update_obj.getEvent_description() + "'";
         }
-        if(update_obj.getUser_name() != null){
+        if(!update_obj.getUser_name().equals("null")){
             temp[2] = " `user_name`  = '" + update_obj.getUser_name() + "'";
         }
         if(update_obj.getEvent_id() != -1){
             temp[3] = " `event_id` = '" + update_obj.getEvent_id() + "'";
         }
-        if(update_obj.getStart_time() != null){
+        if(!update_obj.getStart_time().equals("null")){
             temp[4] = "`start_time`  = '" + update_obj.getStart_time()+"'";
         }
-        if(update_obj.getEnd_time() != null){
+        if(!update_obj.getEnd_time().equals("null")){
             temp[5] = " `end_time` = '" + update_obj.getEnd_time() +"'";
         }
 
-        if(temp[0] == null && temp[1] == null && temp[2] == null && temp[3] == null && temp[4] == null && temp[5] == null  ){
+        if(temp[0].equals("") && temp[1].equals("") && temp[2].equals("") && temp[3].equals("") && temp[4].equals("") && temp[5].equals("")){
             throw new Exception("please using correct event as parameter");
 
         }
 
         int record = 0;
         for(int i = 0; i < 6; i++){
-            if(record == 1 && temp[i] != ""){
+            if(record == 1 && !temp[i].equals("")){
                 temp[i] = ", " + temp[i];
             }
             if(!temp[i].equals("")){
@@ -245,8 +276,12 @@ public class For_Events {
             //use sql string to update database data
             as = conn.createStatement();
             String sql = "UPDATE `events` SET " + temp[6] + " where ";
+            String sql_temp;
             for(int i = 0; i < search_result.size(); i++){
-                as.executeUpdate(sql + "`event_id` = " +search_result.get(i).getEvent_id()+";");
+                sql_temp = sql + "`event_id` = '"+search_result.get(i).getEvent_id()+"';";
+
+
+                as.executeUpdate(sql_temp);
             }
 
             return 1;//means success

@@ -2,14 +2,13 @@ package Events.api_part;
 
 import Events.JDBC.For_Events;
 import Events.bean.Events;
-import Students.JDBC.For_students;
-import Students.bean.Students;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -34,43 +33,64 @@ public class eve_service {
             @QueryParam("start_t") String start_t,
             @QueryParam("end_t") String end_t
     ) throws Exception {
+        Connection conn = null;
+        try {
+            //creat a event object according to the parameters
+            Events A = new Events();
+            A.setEvent_id(event_id);
+            A.setEvent_title(event_title);
+            A.setEvent_description(event_description);
+            A.setUser_name(event_user);
+            A.setStart_time(start_t);
+            A.setEnd_time(end_t);
 
-        //creat a event object according to the parameters
-        Events A = new Events();
-        A.setEvent_id(event_id);
-        A.setEvent_title(event_title);
-        A.setEvent_description(event_description);
-        A.setUser_name(event_user);
-        A.setStart_time(start_t);
-        A.setEnd_time(end_t);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date_start = sdf.parse(start_t);
+            Calendar calendar_start = Calendar.getInstance();
+            calendar_start.setTime(date_start);
 
+            Date date_end = sdf.parse(end_t);
+            Calendar calendar_end = Calendar.getInstance();
+            calendar_end.setTime(date_end);
 
-        //get connection from mysql database
-        Connection conn = For_Events.getConn();
+            if (calendar_end.before(calendar_start)) {
+                throw new Exception("end time cannot before start time");
+            }
 
-        //search the result from the database
-        List<Events> result = For_Events.get(conn,A);
+            //get connection from mysql database
+            conn = For_Events.getConn();
 
-        //xml data header
-        String xml_data = "<?xml version=\"1.0\"?>" +
-                "<events>";
+            //search the result from the database
+            List<Events> result = For_Events.get(conn, A);
 
-        //generate xml data
-        for(int i = 0; i < result.size(); i++){
-            xml_data += "<event>";
-            xml_data += "<event_ID>" + result.get(i).getEvent_id() + "</event_ID>";
-            xml_data += "<title>" + result.get(i).getEvent_title() + "</title>";
-            xml_data += "<description>" + result.get(i).getEvent_description() + "</description>";
+            //xml data header
+            String xml_data = "<?xml version=\"1.0\"?>" +
+                    "<events>";
 
-            xml_data += "<user>" + result.get(i).getUser_name() + "</user>";
-            xml_data += "<Start_time>" + result.get(i).getStart_time() + "</Start_time>";
-            xml_data += "<End_time>" + result.get(i).getEnd_time() + "</End_time>";
+            //generate xml data
+            for (int i = 0; i < result.size(); i++) {
+                xml_data += "<event>";
+                xml_data += "<event_ID>" + result.get(i).getEvent_id() + "</event_ID>";
+                xml_data += "<title>" + result.get(i).getEvent_title() + "</title>";
+                xml_data += "<description>" + result.get(i).getEvent_description() + "</description>";
 
-            xml_data += "</event>";
+                xml_data += "<user>" + result.get(i).getUser_name() + "</user>";
+                xml_data += "<Start_time>" + result.get(i).getStart_time() + "</Start_time>";
+                xml_data += "<End_time>" + result.get(i).getEnd_time() + "</End_time>";
+
+                xml_data += "</event>";
+            }
+
+            xml_data += "</events>";
+
+            return xml_data;
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            //close the connection resource
+            For_Events.close(conn);
         }
-
-        xml_data += "</events>";
-        return xml_data;
+        return "";
     }
 
     @POST
@@ -83,24 +103,45 @@ public class eve_service {
             @QueryParam("start_t") String start_t,
             @QueryParam("end_t") String end_t
     ) throws Exception {
-        System.out.println("afddfa\n");
+        Connection conn = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date_start = sdf.parse(start_t);
+            Calendar calendar_start = Calendar.getInstance();
+            calendar_start.setTime(date_start);
 
-        //creat a event object according to the parameters
-        Events A = new Events();
-        A.setEvent_title(event_title);
-        A.setEvent_description(event_description);
-        A.setUser_name(event_user);
-        A.setStart_time(start_t);
-        A.setEnd_time(end_t);
+            Date date_end = sdf.parse(end_t);
+            Calendar calendar_end = Calendar.getInstance();
+            calendar_end.setTime(date_end);
 
-        //get connection from mysql database
-        Connection conn = For_Events.getConn();
+            if (calendar_end.before(calendar_start)) {
+                throw new Exception("end time cannot before start time");
+            }
 
-        //search the result from the database
-        int feedback = For_Events.insert(conn,A);
+            //creat a event object according to the parameters
+            Events A = new Events();
+            A.setEvent_title(event_title);
+            A.setEvent_description(event_description);
+            A.setUser_name(event_user);
+            A.setStart_time(start_t);
+            A.setEnd_time(end_t);
 
-        //feedback 1 means success, 0 means fail
-        return feedback + "";
+            //get connection from mysql database
+            conn = For_Events.getConn();
+
+            //search the result from the database
+            int feedback = For_Events.insert(conn, A);
+
+            //feedback 1 means success, 0 means fail
+            return feedback + "";
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            //close the connection resource
+            For_Events.close(conn);
+        }
+        return "0";
+
     }
 
     @PUT
@@ -119,33 +160,56 @@ public class eve_service {
             @QueryParam("start_t") String start_t,
             @QueryParam("end_t") String end_t
     ) throws Exception {
-        //creat two event objects according to the parameters
-
-        Events A_search = new Events();
-        A_search.setEvent_id(event_id_s);
-        A_search.setEvent_title(event_title_s);
-        A_search.setEvent_description(event_description_s);
-        A_search.setUser_name(event_user_s);
-        A_search.setStart_time(start_t_s);
-        A_search.setEnd_time(end_t_s);
-
-
-        Events A = new Events();
-        A.setEvent_title(event_title);
-        A.setEvent_description(event_description);
-        A.setUser_name(event_user);
-        A.setStart_time(start_t);
-        A.setEnd_time(end_t);
+        Connection conn = null;
+        try {
+            //creat two event objects according to the parameters
+            Events A_search = new Events();
+            A_search.setEvent_id(event_id_s);
+            A_search.setEvent_title(event_title_s);
+            A_search.setEvent_description(event_description_s);
+            A_search.setUser_name(event_user_s);
 
 
-        //get connection from mysql database
-        Connection conn = For_Events.getConn();
 
-        //search the result from the database
-        int result = For_Events.update(conn,A_search,A);
+            A_search.setStart_time(start_t_s);
+            A_search.setEnd_time(end_t_s);
 
-        //1 means success, 0 means fail
-        return result + "";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date_start = sdf.parse(start_t);
+            Calendar calendar_start = Calendar.getInstance();
+            calendar_start.setTime(date_start);
+
+            Date date_end = sdf.parse(end_t);
+            Calendar calendar_end = Calendar.getInstance();
+            calendar_end.setTime(date_end);
+
+            if (calendar_end.before(calendar_start)) {
+                throw new Exception("end time cannot before start time");
+            }
+
+            Events A = new Events();
+            A.setEvent_title(event_title);
+            A.setEvent_description(event_description);
+            A.setUser_name(event_user);
+            A.setStart_time(start_t);
+            A.setEnd_time(end_t);
+
+
+            //get connection from mysql database
+            conn = For_Events.getConn();
+
+            //search the result from the database
+            int result = For_Events.update(conn, A_search, A);
+
+            //1 means success, 0 means fail
+            return result + "";
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            //close the connection resource
+            For_Events.close(conn);
+        }
+        return "0";
     }
 
     @DELETE
@@ -159,23 +223,45 @@ public class eve_service {
             @QueryParam("start_t") String start_t,
             @QueryParam("end_t") String end_t
     ) throws Exception {
-        //creat a event object according to the parameters
-        Events A = new Events();
-        A.setEvent_id(event_id);
-        A.setEvent_title(event_title);
-        A.setEvent_description(event_description);
-        A.setUser_name(event_user);
-        A.setStart_time(start_t);
-        A.setEnd_time(end_t);
+        Connection conn = null;
+        try {
+            //creat a event object according to the parameters
+            Events A = new Events();
+            A.setEvent_id(event_id);
+            A.setEvent_title(event_title);
+            A.setEvent_description(event_description);
+            A.setUser_name(event_user);
+            A.setStart_time(start_t);
+            A.setEnd_time(end_t);
 
-        //get connection from mysql database
-        Connection conn = For_Events.getConn();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date_start = sdf.parse(start_t);
+            Calendar calendar_start = Calendar.getInstance();
+            calendar_start.setTime(date_start);
 
-        //search the result from the database
-        int result = For_Events.delete(conn,A);
+            Date date_end = sdf.parse(end_t);
+            Calendar calendar_end = Calendar.getInstance();
+            calendar_end.setTime(date_end);
 
-        //1 means success, 0 means fail
-        return result+"";
+            if (calendar_end.before(calendar_start)) {
+                throw new Exception("end time cannot before start time");
+            }
+
+            //get connection from mysql database
+            conn = For_Events.getConn();
+
+            //search the result from the database
+            int result = For_Events.delete(conn, A);
+
+            //1 means success, 0 means fail
+            return result + "";
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            //close the connection resource
+            For_Events.close(conn);
+        }
+        return "0";
     }
 
 

@@ -1,10 +1,6 @@
 package Events.bean;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 public class Events {
 
 
@@ -12,10 +8,10 @@ public class Events {
     private String event_title;
     private String event_description;
     private String user_name;
-    private Calendar start_time;
-    private Calendar end_time;
+    private String start_time;
+    private String end_time;
 
-    public Events(long event_id, String event_title, String event_description, String user_name, Calendar start_time, Calendar end_time) {
+    public Events(long event_id, String event_title, String event_description, String user_name, String start_time, String end_time) {
         this.event_id = event_id;
         this.event_title = event_title;
         this.event_description = event_description;
@@ -26,11 +22,11 @@ public class Events {
 
     public Events() {
         this.event_id = -1;
-        this.event_title = null;
-        this.event_description = null;
-        this.user_name = null;
-        this.start_time = null;
-        this.end_time = null;
+        this.event_title = "null";
+        this.event_description = "null";
+        this.user_name = "null";
+        this.start_time = "null";
+        this.end_time = "null";
     }
 
     public long getEvent_id() {
@@ -66,32 +62,36 @@ public class Events {
     }
 
     public String getStart_time() {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd|HH:mm:ss");
-
-        return sdf.format(start_time.getTime());
+        return start_time;
     }
 
     public void setStart_time(String start_time) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd|HH:mm:ss");
-        Date date = sdf.parse(start_time);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        this.start_time = calendar;
+        //to check whether the string is calander format
+
+        String rexp = "^((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\\s+([0-1]?[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+
+        if(start_time.matches(rexp)){
+            this.start_time = start_time;
+
+        }else{
+            throw new Exception("cannot set this time format");
+        }
     }
 
     public String getEnd_time() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd|HH:mm:ss");
-
-        return sdf.format(end_time.getTime());
+        return end_time;
     }
 
     public void setEnd_time(String end_time) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd|HH:mm:ss");
-        Date date = (Date) sdf.parse(end_time);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        this.end_time = calendar;
+        //to check whether the string is calander format
+        String rexp = "^((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\\s+([0-1]?[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+
+        if(end_time.matches(rexp)){
+            this.end_time = end_time;
+
+        }else{
+            throw new Exception("cannot set this time format");
+        }
     }
 
     public int equal(Events obj){

@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,23 +29,85 @@
     </nav>
 
     <div class="header">
-        <h1 style="color: #c8d8e4;">POST Method - Create New Student/New Course</h1>
+        <h1 style="color: #c8d8e4;">POST Method - Create New Student/New Event</h1>
     </div>
 
-    <form action = ".jsp" method = "POST" class="video">
-        Student Number: <br>
-        <input type = "text" name = "student_number">
+
+    <%
+
+        String stu1 = (String) request.getParameter("stu_id");
+        String stu2 = (String) request.getParameter("stu_name");
+        String stu3 = (String) request.getParameter("stu_number");
+        String stu4 = (String) request.getParameter("stu_course");
+
+        String eve = (String) request.getParameter("eve_title");
+        String eve1 = (String) request.getParameter("eve_description");
+        String eve2 = (String) request.getParameter("eve_start_time");
+        String eve3 = (String) request.getParameter("eve_end_time");
+        String eve4 = (String) request.getParameter("eve_id");
+
+
+        if(stu1 == null) stu1 = "";
+        if(stu2 == null) stu2 = "";
+        if(stu3 == null) stu3 = "";
+        if(stu4 == null) stu4 = "";
+
+        if(eve == null) eve = "";
+        if(eve2 == null) eve2 = "";
+        if(eve3 == null) eve3 = "";
+        if(eve4 == null) eve4 = "";
+        if(eve1 == null) eve1 = "";
+        
+
+        String a = (String) request.getSession().getAttribute("error");
+        
+        if(a != "0" && a != null){
+            eve1 = "there are some error occured";
+        }
+        if(a == null){
+            eve1 = "";
+        }
+        request.getSession().removeAttribute("error");
+
+        request.removeAttribute("stu_id");
+        request.removeAttribute("stu_name");
+        request.removeAttribute("stu_number");
+        request.removeAttribute("stu_course");
+        request.removeAttribute("eve_title");
+        request.removeAttribute("eve_start_time");
+        request.removeAttribute("eve_end_time");
+        request.removeAttribute("eve_id");
+        request.removeAttribute("eve_description");
+
+
+    %>
+
+
+
+    <form action = "/serve/post_Servlet" method = "post" class="video">
+        Student part:<br>
+        Student ID: <input type = "text" value="<%=stu1%>" oninput="value=value.replace(/[^\d]/g,'')" name = "stu_id"/>
         <br>
-        Student Name: <br>
-        <input type = "text" name = "student_name">
+        Student Name: <input type = "text" value="<%=stu2%>" name = "stu_name" />
         <br>
-        Student Course: <br>
-        <input type = "text" name = "student_course">
+        Student Number:<input type = "text" value="<%=stu3%>" name = "stu_number"/>
         <br>
-        Course Name: <br>
-        <input type = "text" name = "course_name" />
+        Course Name: <input type = "text" value="<%=stu4%>" name = "stu_course" />
+        <br>
+
+        Event part:<br>
+        Event ID: <input type = "text" value="<%=eve4%>"oninput="value=value.replace(/[^\d]/g,'')"  name = "eve_id"/>
+        <br>
+        Event title: <input type = "text" value="<%=eve%>" name = "eve_title" />
+        <br>
+        Event start time:<input type = "text" value="<%=eve2%>" name = "eve_start_time"/>
+        <br>
+        Event end time: <input type = "text" value="<%=eve3%>" name = "eve_end_time"/>
+        <br>
+        Event description: <input type = "text" value="<%=eve1%>" name = "eve_description" width="400px" height="200px"/>
         <br>
         <input type = "submit" value = "Submit" />
+
      </form>
     
     

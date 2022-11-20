@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,22 +29,124 @@
     </nav>
 
     <div class="header">
-        <h1 style="color: #c8d8e4;">PUT Method - Update Student Information/Course Information</h1>
+        <h1 style="color: #c8d8e4;">PUT Method - Update Student Information/Event Information</h1>
     </div>
 
-    <form action = ".jsp" method = "PUT" class="video">
-        Student Number: <br>
-        <input type = "text" name = "student_number">
+
+    <%
+        String s_stu1 = (String) request.getParameter("Locat_stu_id");
+        String s_stu2 = (String) request.getParameter("Locat_stu_name");
+        String s_stu3 = (String) request.getParameter("Locat_stu_number");
+        String s_stu4 = (String) request.getParameter("Locat_stu_course");
+
+        String stu2 = (String) request.getParameter("stu_name");
+        String stu3 = (String) request.getParameter("stu_number");
+        String stu4 = (String) request.getParameter("stu_course");
+
+        String s_eve = (String) request.getParameter("Locat_eve_title");
+        String s_eve5 = (String) request.getParameter("Locat_user_name");
+        String s_eve2 = (String) request.getParameter("Locat_eve_start_time");
+        String s_eve3 = (String) request.getParameter("Locat_eve_end_time");
+        String s_eve4 = (String) request.getParameter("Locat_eve_id");
+
+        String eve = (String) request.getParameter("eve_title");
+        String eve5 = (String) request.getParameter("user_name");
+        String eve1 = (String) request.getParameter("eve_description");
+        String eve2 = (String) request.getParameter("eve_start_time");
+        String eve3 = (String) request.getParameter("eve_end_time");
+
+        if(stu2 == null) stu2 = "";
+        if(stu3 == null) stu3 = "";
+        if(stu4 == null) stu4 = "";
+
+        if(eve == null) eve = "";
+        if(eve2 == null) eve2 = "";
+        if(eve3 == null) eve3 = "";
+        if(eve5 == null) eve5 = "";
+        if(eve1 == null) eve1 = "";
+
+        if(s_stu1 == null) s_stu1 = "";
+        if(s_stu2 == null) s_stu2 = "";
+        if(s_stu3 == null) s_stu3 = "";
+        if(s_stu4 == null) s_stu4 = "";
+
+        if(s_eve == null) s_eve = "";
+        if(s_eve2 == null) s_eve2 = "";
+        if(s_eve3 == null) s_eve3 = "";
+        if(s_eve4 == null) s_eve4 = "";
+        if(s_eve5 == null) s_eve5 = "";
+
+
+        String a = (String) request.getSession().getAttribute("error");
+        if(a != "0" && a != null){
+            a = "error occured";
+        }else{
+            a = "";
+        }
+        request.getSession().removeAttribute("error");
+
+        request.removeAttribute("stu_id");
+        request.removeAttribute("stu_name");
+        request.removeAttribute("stu_number");
+        request.removeAttribute("stu_course");
+        request.removeAttribute("eve_title");
+        request.removeAttribute("eve_start_time");
+        request.removeAttribute("eve_end_time");
+        request.removeAttribute("eve_id");
+
+
+    %>
+
+    <form action = "/serve/put_Servlet" method = "post" class="video">
+        <%=a%><br>
+
+
+        Student information update part: parameter used to locate information:<br>
+
+        Student ID: <input type = "text" value="<%=s_stu1%>" oninput="value=value.replace(/[^\d]/g,'')" name = "Locat_stu_id"/>
         <br>
-        Student Name: <br>
-        <input type = "text" name = "student_name">
+        Student Name: <input type = "text" value="<%=s_stu2%>" name = "Locat_stu_name" />
         <br>
-        Student Course: <br>
-        <input type = "text" name = "student_course">
+        Student Number:<input type = "text" value="<%=s_stu3%>" name = "Locat_stu_number"/>
         <br>
-        Course Name: <br>
-        <input type = "text" name = "course_name" />
+        Course Name: <input type = "text" value="<%=s_stu4%>" name = "Locat_stu_course" />
         <br>
+
+        Student information after changing:<br>
+        Student Name: <input type = "text" value="<%=stu2%>" name = "stu_name" />
+        <br>
+        Student Number:<input type = "text" value="<%=stu3%>" name = "stu_number"/>
+        <br>
+        Course Name: <input type = "text" value="<%=stu4%>" name = "stu_course" />
+        <br>
+
+
+        Event information update part: parameter used to locate information:<br>
+
+        Event ID: <input type = "text" value="<%=s_eve4%>" oninput="value=value.replace(/[^\d]/g,'')" name = "Locat_eve_id"/>
+        <br>
+        Event title: <input type = "text" value="<%=s_eve%>" name = "Locat_eve_title" />
+        <br>
+        Event user_name: <input type = "text" value="<%=s_eve5%>" name = "Locat_user_name" />
+        <br>
+        Event start time:<input type = "text" value="<%=s_eve2%>" name = "Locat_eve_start_time"/>
+        <br>
+        Event end time: <input type = "text" value="<%=s_eve3%>" name = "Locat_eve_end_time"/>
+        <br>
+
+        Event information after changing:<br>
+
+        Event title: <input type = "text" value="<%=eve%>" name = "eve_title" />
+        <br>
+        Event user_name: <input type = "text" value="<%=eve5%>" name = "user_name" />
+        <br>
+        Event start time:<input type = "text" value="<%=eve2%>" name = "eve_start_time"/>
+        <br>
+        Event end time: <input type = "text" value="<%=eve3%>" name = "eve_end_time"/>
+        <br>
+        Event description: <input type = "text" value="<%=eve1%>" name = "eve_description" width="400px" height="200px"/>
+        <br>
+
         <input type = "submit" value = "Submit" />
      </form>
     
