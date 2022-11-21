@@ -112,17 +112,19 @@ public class post_Servlet extends HttpServlet {
                 stu_name.add(stu2);
             }
 
-            for (int eve_count = 0; eve_count < stu_name.size(); eve_count++) {
-                //insert data into event database
-                //put in parameters in to post web request
-                MultivaluedMap post_pa = new MultivaluedMapImpl();
-                post_pa.add("event_title", eve);
-                post_pa.add("event_description", eve1);
-                post_pa.add("event_user", stu_name.get(eve_count));
-                post_pa.add("start_t", eve2);
-                post_pa.add("end_t", eve3);
+            if(!eve.equals("null") || !eve1.equals("null") || !eve2.equals("2000-01-01 00:00:00") || !eve3.equals("2000-01-01 00:00:00")) {
+                for (int eve_count = 0; eve_count < stu_name.size(); eve_count++) {
+                    //insert data into event database
+                    //put in parameters in to post web request
+                    MultivaluedMap post_pa = new MultivaluedMapImpl();
+                    post_pa.add("event_title", eve);
+                    post_pa.add("event_description", eve1);
+                    post_pa.add("event_user", stu_name.get(eve_count));
+                    post_pa.add("start_t", eve2);
+                    post_pa.add("end_t", eve3);
 
-                eve_service.path(eve_POST_PATH).queryParams(post_pa).post();
+                    eve_service.path(eve_POST_PATH).queryParams(post_pa).post();
+                }
             }
             request.getSession().setAttribute("error","0");
 

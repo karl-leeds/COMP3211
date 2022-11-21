@@ -141,7 +141,7 @@ public class For_Events {
 
                     result_list.add(eve);
                 }else {
-                    if (calendar_start_s.before(calendar_end) && calendar_start_s.after(calendar_start)) {
+                    if (!calendar_end.before(calendar_start_s) && !calendar_start.after(calendar_start_s)) {
                         eve = new Events();
                         eve.setEvent_id(id);
                         eve.setUser_name(name);
@@ -249,10 +249,10 @@ public class For_Events {
         if(update_obj.getEvent_id() != -1){
             temp[3] = " `event_id` = '" + update_obj.getEvent_id() + "'";
         }
-        if(!update_obj.getStart_time().equals("null")){
+        if(!update_obj.getStart_time().equals("2000-01-01 00:00:00")){
             temp[4] = "`start_time`  = '" + update_obj.getStart_time()+"'";
         }
-        if(!update_obj.getEnd_time().equals("null")){
+        if(!update_obj.getEnd_time().equals("2000-01-01 00:00:00")){
             temp[5] = " `end_time` = '" + update_obj.getEnd_time() +"'";
         }
 
@@ -279,8 +279,6 @@ public class For_Events {
             String sql_temp;
             for(int i = 0; i < search_result.size(); i++){
                 sql_temp = sql + "`event_id` = '"+search_result.get(i).getEvent_id()+"';";
-
-
                 as.executeUpdate(sql_temp);
             }
 

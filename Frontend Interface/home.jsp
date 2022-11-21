@@ -32,6 +32,13 @@
         <h1 style="color: #c8d8e4;">COMP3211 Student Timetable Web Service Application</h1>
     </div>
 
+    <br>
+    <br>
+    <div class="header">
+        <p style="color: #c8d8e4;">Demo Video</p>
+    </div>
+
+    <br>
     <div class="video">
         <video width="600" height="480" controls>
             <source src="" type="video/mp4">

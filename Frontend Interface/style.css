@@ -129,3 +129,9 @@ nav {
   font-size: 15px;
   font-family: "Poppins", sans-serif;
 }
+
+
+
+#description {
+  line-height: 8em;
+}

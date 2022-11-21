@@ -97,57 +97,60 @@
 
     %>
 
-    <form action = "/serve/put_Servlet" method = "post" class="video">
+    <form action ="/serve/put_Servlet" method ="post" class="video">
         <%=a%><br>
 
 
-        Student information update part: parameter used to locate information:<br>
-
-        Student ID: <input type = "text" value="<%=s_stu1%>" oninput="value=value.replace(/[^\d]/g,'')" name = "Locat_stu_id"/>
+        Student Information Update: Student that is to be updated:<br>
         <br>
-        Student Name: <input type = "text" value="<%=s_stu2%>" name = "Locat_stu_name" />
+        Student ID: <input type ="text" value="<%=s_stu1%>" oninput="value=value.replace(/[^\d]/g,'')" name ="Locat_stu_id"/>
         <br>
-        Student Number:<input type = "text" value="<%=s_stu3%>" name = "Locat_stu_number"/>
+        Student Name: <input type ="text" value="<%=s_stu2%>" name ="Locat_stu_name" />
         <br>
-        Course Name: <input type = "text" value="<%=s_stu4%>" name = "Locat_stu_course" />
+        Student Number:<input type ="text" value="<%=s_stu3%>" name ="Locat_stu_number"/>
         <br>
-
-        Student information after changing:<br>
-        Student Name: <input type = "text" value="<%=stu2%>" name = "stu_name" />
-        <br>
-        Student Number:<input type = "text" value="<%=stu3%>" name = "stu_number"/>
-        <br>
-        Course Name: <input type = "text" value="<%=stu4%>" name = "stu_course" />
+        Course Name: <input type ="text" value="<%=s_stu4%>" name ="Locat_stu_course" />
+        <br><br>
         <br>
 
+        Student Information - To update student with:<br>
+        <br>
+        Student Name: <input type ="text" value="<%=stu2%>" name ="stu_name" />
+        <br>
+        Student Number:<input type ="text" value="<%=stu3%>" name ="stu_number"/>
+        <br>
+        Course Name: <input type ="text" value="<%=stu4%>" name ="stu_course" />
+        <br><br><br>
 
-        Event information update part: parameter used to locate information:<br>
 
-        Event ID: <input type = "text" value="<%=s_eve4%>" oninput="value=value.replace(/[^\d]/g,'')" name = "Locat_eve_id"/>
-        <br>
-        Event title: <input type = "text" value="<%=s_eve%>" name = "Locat_eve_title" />
-        <br>
-        Event user_name: <input type = "text" value="<%=s_eve5%>" name = "Locat_user_name" />
-        <br>
-        Event start time:<input type = "text" value="<%=s_eve2%>" name = "Locat_eve_start_time"/>
-        <br>
-        Event end time: <input type = "text" value="<%=s_eve3%>" name = "Locat_eve_end_time"/>
-        <br>
 
-        Event information after changing:<br>
-
-        Event title: <input type = "text" value="<%=eve%>" name = "eve_title" />
+        Event Information Update: Event that is to be updated:<br>
         <br>
-        Event user_name: <input type = "text" value="<%=eve5%>" name = "user_name" />
+        Event ID: <input type ="text" value="<%=s_eve4%>" oninput="value=value.replace(/[^\d]/g,'')" name ="Locat_eve_id"/>
         <br>
-        Event start time:<input type = "text" value="<%=eve2%>" name = "eve_start_time"/>
+        Event Title: <input type ="text" value="<%=s_eve%>" name ="Locat_eve_title" />
         <br>
-        Event end time: <input type = "text" value="<%=eve3%>" name = "eve_end_time"/>
+        Event User Name: <input type ="text" value="<%=s_eve5%>" name ="Locat_user_name" />
         <br>
-        Event description: <input type = "text" value="<%=eve1%>" name = "eve_description" width="400px" height="200px"/>
+        Event Start Time:<input type ="text" value="<%=s_eve2%>" name ="Locat_eve_start_time"/>
         <br>
-
-        <input type = "submit" value = "Submit" />
+        Event End Time: <input type ="text" value="<%=s_eve3%>" name ="Locat_eve_end_time"/>
+        <br><br>
+        <br>
+        Event Information: To update event with:<br>
+        <br>
+        Event Title: <input type ="text" value="<%=eve%>" name ="eve_title" />
+        <br>
+        Event User Name: <input type ="text" value="<%=eve5%>" name ="user_name" />
+        <br>
+        Event Start Time:<input type ="text" value="<%=eve2%>" name ="eve_start_time"/>
+        <br>
+        Event End Time: <input type ="text" value="<%=eve3%>" name ="eve_end_time"/>
+        <br>
+        Event Description: <textarea type ="text" value="<%=eve1%>" name ="eve_description"> </textarea>
+        <br>
+        <br><br>
+        <input type ="submit" value ="Submit" />
      </form>
     
     

@@ -71,31 +71,34 @@
     %>
 
     <div class="header">
-        <h1 style="color: #c8d8e4;">DELETE Method - Delete Student/Event based on ID or Name</h1>
+        <h1 style="color: #c8d8e4;">DELETE Method - Delete Student/Event</h1>
     </div>
 
-    <form action = "/serve/delete_Servlet" method = "post" class="video">
-        Student part: <%=a%><br>
-        Student ID: <input type = "text" value="<%=stu1%>" oninput="value=value.replace(/[^\d]/g,'')" name = "stu_id"/>
+    <form action ="/serve/delete_Servlet" method ="post" class="video">
+        Student Part: <%=a%><br>
         <br>
-        Student Name: <input type = "text" value="<%=stu2%>" name = "stu_name" />
+        Student ID: <input type ="text" value="<%=stu1%>" oninput="value=value.replace(/[^\d]/g,'')" name ="stu_id"/>
         <br>
-        Student Number:<input type = "text" value="<%=stu3%>" name = "stu_number"/>
+        Student Name: <input type ="text" value="<%=stu2%>" name ="stu_name" />
         <br>
-        Course Name: <input type = "text" value="<%=stu4%>" name = "stu_course" />
+        Student Number:<input type ="text" value="<%=stu3%>" name ="stu_number"/>
         <br>
+        Course Name: <input type ="text" value="<%=stu4%>" name ="stu_course" />
+        <br><br>
 
-        Event part: <%=a%><br>
-        Event ID: <input type = "text" value="<%=eve4%>" oninput="value=value.replace(/[^\d]/g,'')"  name = "eve_id"/>
-        <br>
-        Event title: <input type = "text" value="<%=eve%>" name = "eve_title" />
-        <br>
-        Event start time:<input type = "text" value="<%=eve2%>" name = "eve_start_time"/>
-        <br>
-        Event end time: <input type = "text" value="<%=eve3%>" name = "eve_end_time"/>
-        <br>
 
-        <input type = "submit" value = "Submit" />
+        Event Part: <%=a%><br>
+        <br>
+        Event ID: <input type ="text" value="<%=eve4%>" oninput="value=value.replace(/[^\d]/g,'')"  name ="eve_id"/>
+        <br>
+        Event Title: <input type ="text" value="<%=eve%>" name ="eve_title" />
+        <br>
+        Event Start Time:<input type ="text" value="<%=eve2%>" name ="eve_start_time"/>
+        <br>
+        Event End Time: <input type ="text" value="<%=eve3%>" name ="eve_end_time"/>
+        <br>
+        <br><br>
+        <input type ="submit" value ="Submit" />
      </form>
 
 </body>
