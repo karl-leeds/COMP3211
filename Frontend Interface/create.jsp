@@ -85,8 +85,6 @@
     <form action ="/serve/post_Servlet" method ="post" class="video">
         Student Part:<br>
         <br>
-        Student ID: <input type ="text" value="<%=stu1%>" oninput="value=value.replace(/[^\d]/g,'')" name ="stu_id"/>
-        <br>
         Student Name: <input type ="text" value="<%=stu2%>" name ="stu_name" />
         <br>
         Student Number:<input type ="text" value="<%=stu3%>" name ="stu_number"/>
@@ -95,8 +93,6 @@
         <br><br>
 
         Event Part:<br>
-        <br>
-        Event ID: <input type ="text" value="<%=eve4%>"oninput="value=value.replace(/[^\d]/g,'')"  name ="eve_id"/>
         <br>
         Event Title: <input type ="text" value="<%=eve%>" name ="eve_title" />
         <br>
