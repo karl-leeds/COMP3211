@@ -1,11 +1,10 @@
 package Student_Web_Service.API;
-import Student_Web_Service.bean.Student;
-import Student_Web_Service.JDBC.StudentJDBC;
+import Student_Web_Service.bean.Students;
+import Student_Web_Service.JDBC.StudentWebServiceJDBC;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 //The GET Method is used to retrieve a student's information from the database based on different student parameters (Student ID and Number)
@@ -14,205 +13,187 @@ import java.util.List;
 //The DELETE Method is used to delete a student's information from the database based on different student parameters (Student ID and Number)
 
 @Path("/students")
-public class Student_Web_Service {
+public class StudentWebService {
 
     @GET
     @Path("/get")
     @Produces(MediaType.TEXT_XML)
-    public String getStudentInfoByID(
-            @QueryParam("student_id") long student_id
+    public String getStudent_info(
+            @QueryParam("student_id") long student_id,
+            @QueryParam("student_name") String student_name,
+            @QueryParam("student_number") String student_number,
+            @QueryParam("student_course") String student_course
     ) throws Exception {
-        //Create a new Student object using the student ID. 
-        Student student = new Student();
-        student.setStudentID(student_id);
+        Connection conn = null;
+        try {
 
-        //Obtain a connection from the MySQL database
-        Connection connection = StudentJDBC.getConnection();
+            //Create a new Student object using the above parameters.
+            Students newStudent = new Students();
+            newStudent.setStudentID(student_id);
+            newStudent.setStudentName(student_name);
+            newStudent.setStudentNumber(student_number);
+            String[] course = student_course.split("@");
+            newStudent.setCourse(course);
 
-        //Searching the database to see if the student is there
-        List<Student> result = StudentJDBC.getStudent(connection, student);
 
-        //Data header for XML (data output format)
-        String xml_data = "<?xml version=\"1.0\"?>" +
-                "<students>";
+            //Obtain a connection from the MySQL database
+            conn = StudentWebServiceJDBC.getConnection();
 
-        //Generating the XML output for our data result
-        for(int i = 0; i < result.size(); i++){
-            xml_data += "<student>";
-            xml_data += "<name>" + result.get(i).getStudentName() + "</name>";
-            xml_data += "<stu_ID>" + result.get(i).getStudentID() + "</stu_ID>";
-            xml_data += "<number>" + result.get(i).getStudentNumber() + "</number>";
-            String courseString = "";
-            for(int o = 0;o < result.get(i).getCourse().length;o++){
-                courseString += result.get(i).getCourse()[o];
-                if(o != result.get(i).getCourse().length-1){
-                    courseString += "@";
+            //Searching the database to see if the student is there
+            List<Students> result = StudentWebServiceJDBC.retrieve(conn, newStudent);
+
+            //Data header for XML (data output format)
+            String xmlData = "<?xml version=\"1.0\"?>" +
+                    "<students>";
+
+            //Generating the XML output for our data result
+            for (int i = 0; i < result.size(); i++) {
+                xmlData += "<student>";
+                xmlData += "<name>" + result.get(i).getStudentName() + "</name>";
+                xmlData += "<stu_ID>" + result.get(i).getStudentID() + "</stu_ID>";
+                xmlData += "<number>" + result.get(i).getStudentNumber() + "</number>";
+                String courseString = "";
+                for (int o = 0; o < result.get(i).getCourse().length; o++) {
+                    courseString += result.get(i).getCourse()[o];
+                    if (o != result.get(i).getCourse().length - 1) {
+                        courseString += "@";
+                    }
                 }
+                xmlData += "<course>" + courseString + "</course>";
+                xmlData += "</student>";
             }
-            xml_data += "<course>" + courseString + "</course>";
-            xml_data += "</student>";
+            xmlData += "</students>";
+
+            return xmlData;
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }finally {
+            StudentWebServiceJDBC.close(conn);
+
         }
-        xml_data += "</students>";
-
-        StudentJDBC.close(connection);
-        return xml_data;
-    }
-
-    @GET
-    @Path("/get")
-    @Produces(MediaType.TEXT_XML)
-    public String getStudentInfoByNumber(
-            @QueryParam("student_number") String student_number
-    ) throws Exception {
-        //Create a new Student object using the student number. 
-        Student student = new Student();
-        student.setStudentNumber(student_number);
-
-        //Obtain a connection from the MySQL database
-        Connection connection = StudentJDBC.getConnection();
-
-        //Searching the database to see if the student is there
-        List<Student> result = StudentJDBC.getStudent(connection, student);
-
-        //Data header for XML (data output format)
-        String xml_data = "<?xml version=\"1.0\"?>" +
-                "<students>";
-
-        //Generating the XML output for our data result
-        for(int i = 0; i < result.size(); i++){
-            xml_data += "<student>";
-            xml_data += "<name>" + result.get(i).getStudentName() + "</name>";
-            xml_data += "<stu_ID>" + result.get(i).getStudentID() + "</stu_ID>";
-            xml_data += "<number>" + result.get(i).getStudentNumber() + "</number>";
-            String courseString = "";
-            for(int o = 0;o < result.get(i).getCourse().length;o++){
-                courseString += result.get(i).getCourse()[o];
-                if(o != result.get(i).getCourse().length-1){
-                    courseString += "@";
-                }
-            }
-            xml_data += "<course>" + courseString + "</course>";
-            xml_data += "</student>";
-        }
-        StudentJDBC.close(connection);
-
-        xml_data += "</students>";
-        return xml_data;
+        return "";
     }
 
     @POST
     @Path("/post")
     @Produces(MediaType.TEXT_PLAIN)
-    public String postStudentInfo(
+    public String postStudent_info(
             @QueryParam("student_name") String student_name,
             @QueryParam("student_number") String student_number,
             @QueryParam("student_course") String student_course
     ) throws Exception {
-        //Create a new student object from the parameters.
-        Student student = new Student();
+        Connection conn = null;
+        try {
 
-        student.setStudentName(student_name);
-        student.setStudentNumber(student_number);
-        String[] course = student_course.split("@");
-        student.setCourse(course);
+            //Create a new student object from the parameters.
+            Students newStudent = new Students();
+            newStudent.setStudentName(student_name);
+            newStudent.setStudentNumber(student_number);
+            String[] course = student_course.split("@");
+            newStudent.setCourse(course);
+            //Obtain a connection from the MySQL database
+            conn = StudentWebServiceJDBC.getConnection();
+            //Searching the database to see if the student is there
+            int result = StudentWebServiceJDBC.insert(conn, newStudent);
+            //If the result is 1, then the new student has been successfully added to the database, otherwise it is not successful
 
-        //Obtain a connection from the MySQL database
-        Connection connection = StudentJDBC.getConnection();
-        
-        //Searching the database to see if the student is there
-        int result = StudentJDBC.insertStudent(connection, student);
+            return result+"";
 
-        StudentJDBC.close(connection);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            StudentWebServiceJDBC.close(conn);
+
+        }
+        return "0";
 
 
-
-        //If the result is 1, then the new student has been successfully added to the database, otherwise it is not successful
-        return result+"";
     }
 
     @PUT
     @Path("/update")
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateStudentInfo(
-            @QueryParam("student_id_cur") long student_id_cur,
-            @QueryParam("student_name_cur") String student_name_cur,
-            @QueryParam("student_number_cur") String student_number_cur,
-            @QueryParam("student_course_cur") String student_course_cur,
+    public String updateStudent_info(
+            @QueryParam("student_id_s") long student_id_s,
+            @QueryParam("student_name_s") String student_name_s,
+            @QueryParam("student_number_s") String student_number_s,
+            @QueryParam("student_course_s") String student_course_s,
+
             @QueryParam("student_name") String student_name,
             @QueryParam("student_number") String student_number,
             @QueryParam("student_course") String student_course
     ) throws Exception {
-        //Using the above parameters, we create 2 student objects.
+        Connection conn = null;
 
-        Student studentSearch = new Student();
-        studentSearch.setStudentID(student_id_cur);
-        studentSearch.setStudentName(student_name_cur);
-        studentSearch.setStudentNumber(student_number_cur);
-        String[] courseSearch = student_course_cur.split("@");
-        studentSearch.setCourse(courseSearch);
+        try {
+            //Using the above parameters, we create 2 student objects.
 
-        Student student = new Student();
-        student.setStudentName(student_name);
-        student.setStudentNumber(student_number);
-        String[] course = student_course.split("@");
-        student.setCourse(course);
+            Students studentSearchObject = new Students();
+            studentSearchObject.setStudentID(student_id_s);
+            studentSearchObject.setStudentName(student_name_s);
+            studentSearchObject.setStudentNumber(student_number_s);
+            String[] courseSearchObject = student_course_s.split("@");
+            studentSearchObject.setCourse(courseSearchObject);
 
-        //Obtain a connection from the MySQL database
-        Connection connection = StudentJDBC.getConnection();
+            Students updateStudentObject = new Students();
+            updateStudentObject.setStudentName(student_name);
+            updateStudentObject.setStudentNumber(student_number);
+            String[] updateCourseObject = student_course.split("@");
+            updateStudentObject.setCourse(updateCourseObject);
 
-        //Searching the database to see if the student is there
-        int result = StudentJDBC.updateStudent(connection, studentSearch, student);
+            //Obtain a connection from the MySQL database
+            conn = StudentWebServiceJDBC.getConnection();
 
-        StudentJDBC.close(connection);
+            //Searching the database to see if the student is there
+            int result = StudentWebServiceJDBC.update(conn, studentSearchObject, updateStudentObject);
+            //If the result is 1, then the student's information has been successfully updated, otherwise it is not successful
 
+            return result+"";
 
-        //If the result is 1, then the student's information has been successfully updated, otherwise it is not successful
-        return result+"";
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            StudentWebServiceJDBC.close(conn);
+        }
+        return "0";
+
     }
 
     @DELETE
     @Path("/delete")
     @Produces(MediaType.TEXT_PLAIN)
-    public String deleteStudentByID(
-            @QueryParam("student_id") long student_id
+    public String deleteStudent_info(
+            @QueryParam("student_id") long student_id,
+            @QueryParam("student_name") String student_name,
+            @QueryParam("student_number") String student_number,
+            @QueryParam("student_course") String student_course
     ) throws Exception {
-        //Create a new Student object using the student ID. 
-        Student student = new Student();
-        student.setStudentID(student_id);
+        Connection conn = null;
 
-        //Obtain a connection from the MySQL database
-        Connection connection = StudentJDBC.getConnection();
+        try {
+            //Create a new Student object using the above parameters.
+            Students studentObject = new Students();
+            studentObject.setStudentID(student_id);
+            studentObject.setStudentName(student_name);
+            studentObject.setStudentNumber(student_number);
+            String[] course = student_course.split("@");
+            studentObject.setCourse(course);
 
-        //Searching the database to see if the student is there
-        int result = StudentJDBC.deleteStudent(connection, student);
+            //Obtain a connection from the MySQL database
+            conn = StudentWebServiceJDBC.getConnection();
 
-        StudentJDBC.close(connection);
+            //Searching the database to see if the student is there
+            int result = StudentWebServiceJDBC.delete(conn, studentObject);
 
-
-        //If the result is 1, then the student has been successfully deleted from the database, otherwise it is not successful
-        return result+"";
-    }
-
-    @DELETE
-    @Path("/delete")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String deleteStudentByNumber(
-            @QueryParam("student_number") String student_number
-    ) throws Exception {
-        //Create a new Student object using the student ID. 
-        Student student = new Student();
-        student.setStudentNumber(student_number);
-
-        //Obtain a connection from the MySQL database
-        Connection connection = StudentJDBC.getConnection();
-
-        //Searching the database to see if the student is there
-        int result = StudentJDBC.deleteStudent(connection, student);
-
-        StudentJDBC.close(connection);
-
-
-        //If the result is 1, then the student has been successfully deleted from the database, otherwise it is not successful
-        return result+"";
+            //If the result is 1, then the student has been successfully deleted from the database, otherwise it is not successful
+            return result+"";
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            StudentWebServiceJDBC.close(conn);
+        }
+        return "0";
     }
 }
