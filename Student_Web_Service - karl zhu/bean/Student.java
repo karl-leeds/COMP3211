@@ -1,72 +1,77 @@
 package Student_Web_Service.bean;
 
-public class Student {
-    private long student_id;
-    private String student_number;
-    private String student_name;
+public class Students {
+    private long studentID;
+    private String studentNumber;
+    private String studentName;
     private String[] course;
 
-    public Student() {
-        this.student_id = -1;
-        this.student_number = null;
-        this.student_name = null;
+    public Students() {
+        this.studentID = -1;
+        this.studentNumber = "null";
+        this.studentName = "null";
         this.course = null;
     }
 
-    public Student(long student_id, String student_number, String student_name, String[] course) {
-        this.student_id = student_id;
-        this.student_number = student_number;
-        this.student_name = student_name;
+    public Students(long studentID, String studentNumber, String studentName, String[] course) {
+        this.studentID = studentID;
+        this.studentNumber = studentNumber;
+        this.studentName = studentName;
         this.course = course;
     }
 
     public long getStudentID() {
-        return student_id;
+        return studentID;
     }
 
-    public void setStudentID(long student_id) {
-        this.student_id = student_id;
+    public void setStudentID(long studentID) {
+        this.studentID = studentID;
     }
 
     public String getStudentNumber() {
-        return student_number;
+        return studentNumber;
     }
 
-    public void setStudentNumber(String student_number) {
-        this.student_number = student_number;
+    public void setStudentNumber(String studentNumber) {
+        this.studentNumber = studentNumber;
     }
 
     public String getStudentName() {
-        return student_name;
+        return studentName;
     }
 
-    public void setStudentName(String student_name) {
-        this.student_name = student_name;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public String[] getCourse() {
         return course;
     }
 
-    public String getCourseString() {
-        String course = "";
-        for(int i = 0; i < this.course.length; i++){
-            if(i == 0){
-                course += this.course[i];
-            }else {
-                course += "@" + this.course[i];
+    public String get_str_Course() {
+        String cour = "";
+        if(course != null) {
+            for (int i = 0; i < course.length; i++) {
+                if (i == 0) {
+                    cour += course[i];
+                } else {
+                    cour += "@" + course[i];
+                }
             }
         }
-        return course;
+        if(cour == ""){
+            cour = "null";
+        }
+        return cour;
     }
 
     public void setCourse(String[] course) {
         this.course = course;
     }
 
-    public int equal(Student student){
+    public int equal(Students student){
         //if the names, student-numbers, and course information are equal, then these two student objects are equal
-        if(this.getStudentName().equals(student.getStudentName())&& this.getStudentNumber().equals(student.getStudentNumber())&& this.getCourseString().equals(student.getCourseString())){
+        if(this.getStudentName().equals(student.getStudentName())&& this.getStudentNumber().equals(student.getStudentNumber())&& this.get_str_Course().equals(student.get_str_Course())){
             return 1;//The 2 student objects are equal
         }
         return 0;//The 2 student objects are not equal
